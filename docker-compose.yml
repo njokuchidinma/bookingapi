@@ -1,0 +1,42 @@
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app  # 👈 Mount local project into container
+    command: gunicorn bookingapi.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      - redis
+      - db
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  celery:
+    build: .
+    volumes:
+      - .:/app  # 👈 Needed so Celery gets latest code too
+    command: celery -A bookingapi worker --loglevel=info
+    env_file: .env
+    depends_on:
+      - redis
+      - db
+
+volumes:
+  postgres_data:

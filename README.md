@@ -39,10 +39,10 @@ cd music-booking-api
 
 ### 2. Create a `.env` File
 ```dotenv
-DATABASE_NAME=music_booking
-DATABASE_USER=adminuser
-DATABASE_PASSWORD=adminpass
-SECRET_KEY=your_secret_key
+DDATABASE_NAME=your_db_name
+DATABASE_USER=your_db_user
+DATABASE_PASSWORD=your_db_password
+SECRET_KEY=your_django_secret_key
 DEBUG=True
 ```
 > Note: Do not commit your `.env` file or expose sensitive database credentials publicly.
